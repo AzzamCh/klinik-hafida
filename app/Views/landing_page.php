@@ -45,7 +45,9 @@
 
     <div class="branding d-flex align-items-center">
       <div class="container position-relative d-flex align-items-center justify-content-between">
-        <a href="<?= base_url('/') ?>" class="logo d-flex align-items-center me-auto">
+      <a href="<?= base_url('/') ?>" class="logo d-flex align-items-center me-auto">
+          <img src="<?= base_url('assets/img/logo.png'); ?>" alt="Logo" class="me-2" style="max-height: 40px;">
+          
           <h1 class="sitename">Klinik Hafida</h1>
         </a>
 
@@ -68,55 +70,76 @@
 
   <main class="main">
 
-    <section id="hero" class="hero section light-background">
-      <img src="<?= base_url('assets/img/hero-bg.jpg'); ?>" alt="" data-aos="fade-in">
+  <section id="hero" class="hero-custom">
+      
+      <div class="container h-100">
+        
+        <div id="heroCarousel" class="carousel slide h-100" data-bs-ride="carousel" data-bs-interval="3000">
+          
+          <div class="carousel-inner h-100">
 
-      <div class="container position-relative">
-        <div class="welcome position-relative" data-aos="fade-down" data-aos-delay="100">
-          <h2>SELAMAT DATANG DI KLINIK HAFIDA</h2>
-          <p>Kesehatan dan kenyamanan keluarga Anda adalah prioritas utama pelayanan kami.</p>
-        </div>
-
-        <div class="content row gy-4">
-          <div class="col-lg-4 d-flex align-items-stretch">
-            <div class="why-box" data-aos="zoom-out" data-aos-delay="200">
-              <h3>Kenapa Klinik Hafida?</h3>
-              <p>
-                Kami menyediakan pelayanan kesehatan terpadu dengan fasilitas modern, dokter yang berpengalaman, serta biaya yang terjangkau. Lokasi strategis dan pelayanan ramah adalah komitmen kami.
-              </p>
-              <div class="text-center">
-                <a href="#about" class="more-btn"><span>Selengkapnya</span> <i class="bi bi-chevron-right"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-8 d-flex align-items-stretch">
-            <div class="d-flex flex-column justify-content-center">
-              <div class="row gy-4">
-                <div class="col-xl-4 d-flex align-items-stretch">
-                  <div class="icon-box" data-aos="zoom-out" data-aos-delay="300">
-                    <i class="bi bi-clipboard-data"></i>
-                    <h4>Rekam Medis Digital</h4>
-                    <p>Data kesehatan pasien tersimpan aman dan mudah diakses untuk riwayat pengobatan.</p>
-                  </div>
+            <div class="carousel-item active">
+              <div class="row align-items-center">
+                <div class="col-lg-6 order-2 order-lg-1" data-aos="fade-up">
+                  <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill">Selamat Datang</span>
+                  <h1>Klinik Hafida <br> Mitra Sehat Keluarga</h1>
+                  <p>
+                    Layanan kesehatan terpercaya dengan fasilitas modern. 
+                    Kami hadir untuk memberikan solusi kesehatan terbaik bagi Anda dan keluarga.
+                  </p>
+                  <a href="#appointment" class="btn btn-light text-success fw-bold rounded-pill px-4 py-2">Daftar Sekarang</a>
                 </div>
-                <div class="col-xl-4 d-flex align-items-stretch">
-                  <div class="icon-box" data-aos="zoom-out" data-aos-delay="400">
-                    <i class="bi bi-gem"></i>
-                    <h4>Fasilitas Lengkap</h4>
-                    <p>Ruang tunggu nyaman, Apotek, Laboratorium dasar, dan ruang tindakan steril.</p>
-                  </div>
-                </div>
-                <div class="col-xl-4 d-flex align-items-stretch">
-                  <div class="icon-box" data-aos="zoom-out" data-aos-delay="500">
-                    <i class="bi bi-clock"></i>
-                    <h4>Layanan Cepat</h4>
-                    <p>Sistem antrean yang efisien meminimalkan waktu tunggu Anda di klinik.</p>
-                  </div>
+                <div class="col-lg-6 order-1 order-lg-2 text-center" data-aos="zoom-in">
+                  <img src="<?= base_url('assets/img/hero-img.png'); ?>" class="hero-img-custom" alt="Dokter">
                 </div>
               </div>
             </div>
+
+            <div class="carousel-item">
+              <div class="row align-items-center">
+                <div class="col-lg-6 order-2 order-lg-1">
+                  <span class="badge bg-white text-success mb-3 px-3 py-2 rounded-pill">Poli Gigi</span>
+                  <h1>Senyum Cerah <br> Percaya Diri</h1>
+                  <p>
+                    Perawatan gigi profesional tanpa rasa sakit. 
+                    Dilayani oleh dokter gigi berpengalaman dengan peralatan steril standar medis.
+                  </p>
+                  <a href="<?= base_url('layanan/detail/poli-gigi'); ?>" class="btn btn-light text-success fw-bold rounded-pill px-4 py-2">Lihat Layanan</a>
+                </div>
+                <div class="col-lg-6 order-1 order-lg-2 text-center">
+                  <img src="<?= base_url('assets/img/doctors/doctors-2.jpg'); ?>" class="hero-img-custom" alt="Poli Gigi">
+                </div>
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="row align-items-center">
+                <div class="col-lg-6 order-2 order-lg-1">
+                  <span class="badge bg-white text-success mb-3 px-3 py-2 rounded-pill">KIA & Imunisasi</span>
+                  <h1>Tumbuh Kembang <br> Anak Optimal</h1>
+                  <p>
+                    Pastikan masa depan si kecil dengan imunisasi lengkap dan pemantauan gizi berkala. 
+                    Klinik ramah anak yang bikin si kecil tidak takut ke dokter.
+                  </p>
+                  <a href="#doctors" class="btn btn-light text-success fw-bold rounded-pill px-4 py-2">Jadwal Dokter</a>
+                </div>
+                <div class="col-lg-6 order-1 order-lg-2 text-center">
+                  <img src="<?= base_url('assets/img/doctors/doctors-1.jpg'); ?>" class="hero-img-custom" alt="Anak Sehat">
+                </div>
+              </div>
+            </div>
+
           </div>
+
+          <div class="carousel-controls-bottom">
+            <button class="btn-nav-hero" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="btn-nav-hero" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
         </div>
       </div>
     </section>
@@ -283,7 +306,7 @@
           </div>
           
           <div class="mt-3 text-center">
-            <a href="https://wa.me/6281234567890?text=Halo%20Admin%20Klinik%20Hafida,%20saya%20ingin%20mendaftar%20berobat." target="_blank" class="btn btn-primary" style="background-color: var(--secondary-color); border: none; padding: 12px 35px; border-radius: 50px; color: white; font-weight: bold;">
+            <a href="https://wa.me/6285291722865?text=Halo%20Admin%20Klinik%20Hafida,%20saya%20ingin%20mendaftar%20berobat." target="_blank" class="btn btn-primary" style="background-color: var(--secondary-color); border: none; padding: 12px 35px; border-radius: 50px; color: white; font-weight: bold;">
               <i class="bi bi-whatsapp"></i> Kirim via WhatsApp
             </a>
           </div>
@@ -440,9 +463,11 @@
     <div class="container footer-top">
       <div class="row gy-4">
         <div class="col-lg-4 col-md-6 footer-about">
-          <a href="<?= base_url('/') ?>" class="logo d-flex align-items-center">
-            <span class="sitename">Klinik Hafida</span>
-          </a>
+        <a href="<?= base_url('/') ?>" class="logo d-flex align-items-center me-auto">
+  <img src="<?= base_url('assets/img/logo.png'); ?>" alt="Logo" class="me-2" style="max-height: 40px;">
+  
+  <h1 class="sitename">Klinik Hafida</h1>
+</a>
           <div class="footer-contact pt-3">
             <p>Jl. Merdeka Raya No. 123</p>
             <p>Kota Anda, Indonesia</p>

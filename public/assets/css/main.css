@@ -304,8 +304,9 @@ h6 {
 }
 
 .header .logo img {
-  max-height: 36px;
-  margin-right: 8px;
+  max-height: 50px; /* Atur tinggi logo disini, sesuaikan biar pas */
+  margin-right: 10px; /* Jarak antara logo dan menu */
+  width: auto; /* Lebar menyesuaikan otomatis */
 }
 
 .header .logo h1 {
@@ -1777,4 +1778,98 @@ section,
 /* 4. Topbar (Baris paling atas) jadi Hijau */
 .header .topbar {
     background-color: var(--accent-color) !important;
+}
+
+/* --- HERO SECTION (TEMA HIJAU KLINIK) --- */
+.hero-custom {
+  /* Gradasi dari Hijau Tua ke Hijau Tosca */
+  background: linear-gradient(135deg, #0f9b0f 0%, #00d2ff 100%); 
+  /* Atau versi lebih soft: */
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  
+  padding: 80px 0 100px 0;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sisanya SAMA seperti sebelumnya */
+.hero-custom h1 {
+  color: #fff;
+  font-weight: 800;
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.hero-custom p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  max-width: 90%;
+}
+
+.hero-img-custom {
+  width: 100%;
+  max-height: 450px;
+  object-fit: contain;
+  animation: upDown 3s infinite alternate;
+}
+
+@keyframes upDown {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-15px); }
+}
+
+/* NAVIGASI BAWAH */
+.carousel-controls-bottom {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  z-index: 10;
+}
+
+.btn-nav-hero {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5); /* Border putih transparan */
+  background: transparent;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.btn-nav-hero:hover {
+  background: var(--warna-aksen); /* Jadi OREN saat disentuh */
+  border-color: var(--warna-aksen);
+  color: white;
+  transform: scale(1.1); /* Efek membesar sedikit */
+}
+/* Header Hijau Serasi dengan Hero */
+.header {
+  background-color: #64ca64 !important; /* Hijau Klinik */
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Teks Menu jadi Putih */
+.navmenu a, .header .logo h1 {
+  color: rgb(68, 47, 47) !important;
+}
+
+/* Warna saat menu disentuh */
+.navmenu a:hover, .navmenu .active {
+  color: #ffeb3b !important; /* Kuning terang */
+}
+
+/* Icon Mobile Menu */
+.mobile-nav-toggle {
+  color: white !important;
 }
