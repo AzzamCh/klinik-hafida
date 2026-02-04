@@ -226,53 +226,21 @@
 
       <div class="container">
         <div class="row gy-4">
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="fas fa-heartbeat"></i></div>
-              <a href="<?= base_url('layanan/detail/poli-umum'); ?>" class="stretched-link"><h3>Poli Umum</h3></a>
-              <p>Pemeriksaan kesehatan umum, konsultasi dokter, pengobatan penyakit ringan hingga kronis.</p>
-            </div>
-          </div>
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="fas fa-tooth"></i></div>
-              <a href="<?= base_url('layanan/detail/poli-gigi'); ?>" class="stretched-link"><h3>Poli Gigi</h3></a>
-              <p>Perawatan gigi, tambal gigi, cabut gigi, pembersihan karang gigi (scaling), dan konsultasi.</p>
+          <?php foreach ($layanan_kami as $poli) : ?>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+              <div class="service-item position-relative">
+                <div class="icon"><i class="<?= $poli['icon']; ?>"></i></div>
+                
+                <a href="<?= base_url('layanan/detail/' . $poli['slug']); ?>" class="stretched-link">
+                  <h3><?= $poli['nama_poli']; ?></h3>
+                </a>
+                
+                <p><?= $poli['deskripsi']; ?></p>
+              </div>
             </div>
-          </div>
+          <?php endforeach; ?>
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="fas fa-baby"></i></div>
-              <a href="<?= base_url('layanan/detail/kia'); ?>" class="stretched-link"><h3>KIA & KB</h3></a>
-              <p>Kesehatan Ibu dan Anak, pemeriksaan kehamilan, imunisasi bayi, dan layanan Keluarga Berencana.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="fas fa-dna"></i></div>
-              <a href="#" class="stretched-link"><h3>Laboratorium</h3></a>
-              <p>Cek Gula Darah, Kolesterol, Asam Urat, Golongan Darah, dan tes urin sederhana.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="fas fa-pills"></i></div>
-              <a href="#" class="stretched-link"><h3>Apotek</h3></a>
-              <p>Instalasi farmasi yang menyediakan obat-obatan lengkap dan terjamin keasliannya sesuai resep.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-            <div class="service-item position-relative">
-              <div class="icon"><i class="fas fa-notes-medical"></i></div>
-              <a href="#" class="stretched-link"><h3>Surat Sehat</h3></a>
-              <p>Pembuatan surat keterangan sehat untuk keperluan melamar kerja, sekolah, atau perjalanan.</p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -322,35 +290,27 @@
 
       <div class="container">
         <div class="row gy-4">
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="team-member d-flex align-items-start">
-              <div class="pic"><img src="<?= base_url('assets/img/doctors/doctors-1.jpg'); ?>" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>dr. Budi Santoso</h4>
-                <span>Kepala Klinik / Dokter Umum</span>
-                <p>Berpengalaman lebih dari 10 tahun menangani pasien umum dan gawat darurat dasar.</p>
-                <div class="social">
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="team-member d-flex align-items-start">
-              <div class="pic"><img src="<?= base_url('assets/img/doctors/doctors-2.jpg'); ?>" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>drg. Siti Aminah</h4>
-                <span>Dokter Gigi</span>
-                <p>Ahli dalam perawatan konservasi gigi dan estetika gigi yang ramah anak.</p>
-                <div class="social">
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
+          <?php foreach ($para_dokter as $dokter) : ?>
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="team-member d-flex align-items-start">
+                <div class="pic">
+                  <img src="<?= base_url('assets/img/doctors/' . $dokter['foto']); ?>" class="img-fluid" alt="">
+                </div>
+                <div class="member-info">
+                  <h4><?= $dokter['nama_dokter']; ?></h4>
+                  <span><?= $dokter['spesialisasi']; ?></span>
+                  
+                  <p class="small text-muted mb-2"><i class="fa fa-clock me-1"></i> <?= $dokter['jadwal']; ?></p>
+                  
+                  <div class="social">
+                    <a href=""><i class="bi bi-facebook"></i></a>
+                    <a href=""><i class="bi bi-instagram"></i></a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          <?php endforeach; ?>
         </div>
       </div>
     </section>

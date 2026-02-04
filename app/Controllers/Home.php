@@ -2,33 +2,33 @@
 
 namespace App\Controllers;
 
+use App\Models\PoliModel;
+use App\Models\DokterModel;
+
 class Home extends BaseController
 {
     public function index()
     {
-        // 1. Siapkan Data Artikel (Nanti ini diganti ambil dari Database)
+        // 1. Panggil Model
+        $poliModel = new PoliModel();
+        $dokterModel = new DokterModel();
+
+        // 2. Ambil Data dari Database
+        $data['layanan_kami'] = $poliModel->findAll(); // Mengambil semua data poli
+        $data['para_dokter'] = $dokterModel->findAll(); // Mengambil semua data dokter
+
+        // 3. Data Artikel (Masih Dummy dulu gpp)
         $data['articles'] = [
             [
                 'judul' => '5 Cara Menjaga Kesehatan Gigi Anak',
                 'tanggal' => '2 Feb 2026',
-                'excerpt' => 'Menjaga kesehatan gigi susu sangat penting untuk pertumbuhan gigi permanen...',
-                'gambar' => 'blog-1.jpg' // Pastikan file ini ada atau pakai placeholder
+                'excerpt' => 'Menjaga kesehatan gigi susu sangat penting...',
+                'gambar' => 'blog-1.jpg'
             ],
-            [
-                'judul' => 'Pentingnya Imunisasi Dasar Lengkap',
-                'tanggal' => '25 Jan 2026',
-                'excerpt' => 'Imunisasi adalah investasi kesehatan terbaik untuk melindungi buah hati dari penyakit...',
-                'gambar' => 'blog-2.jpg'
-            ],
-            [
-                'judul' => 'Jadwal Dokter Spesialis Baru',
-                'tanggal' => '10 Jan 2026',
-                'excerpt' => 'Kabar gembira! Klinik Hafida kini membuka layanan spesialis anak setiap hari Sabtu...',
-                'gambar' => 'blog-3.jpg'
-            ]
+            // ... artikel lain bisa ditambah nanti
         ];
 
-        // 2. Kirim data ke view landing_page
+        // 4. Kirim semua data ke View
         return view('landing_page', $data);
     }
 }
