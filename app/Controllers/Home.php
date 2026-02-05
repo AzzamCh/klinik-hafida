@@ -4,31 +4,27 @@ namespace App\Controllers;
 
 use App\Models\PoliModel;
 use App\Models\DokterModel;
+use App\Models\ArtikelModel; // 1. Jangan lupa load model Artikel
 
 class Home extends BaseController
 {
     public function index()
     {
-        // 1. Panggil Model
+        // Panggil semua Model yang dibutuhkan
         $poliModel = new PoliModel();
         $dokterModel = new DokterModel();
+        $artikelModel = new ArtikelModel();
 
-        // 2. Ambil Data dari Database
-        $data['layanan_kami'] = $poliModel->findAll(); // Mengambil semua data poli
-        $data['para_dokter'] = $dokterModel->findAll(); // Mengambil semua data dokter
+        // Ambil Data dari Database
+        $data['layanan_kami'] = $poliModel->findAll(); 
+        $data['para_dokter'] = $dokterModel->findAll();
 
-        // 3. Data Artikel (Masih Dummy dulu gpp)
-        $data['articles'] = [
-            [
-                'judul' => '5 Cara Menjaga Kesehatan Gigi Anak',
-                'tanggal' => '2 Feb 2026',
-                'excerpt' => 'Menjaga kesehatan gigi susu sangat penting...',
-                'gambar' => 'blog-1.jpg'
-            ],
-            // ... artikel lain bisa ditambah nanti
-        ];
+        // 2. Ambil Data Artikel ASLI dari Database
+        // 'orderBy' agar berita terbaru muncul paling atas
+        // 'findAll(3)' agar cuma 3 berita yang muncul di halaman depan
+        $data['articles'] = $artikelModel->orderBy('tanggal', 'DESC')->findAll(3);
 
-        // 4. Kirim semua data ke View
+        // Kirim semua data ke View
         return view('landing_page', $data);
     }
 }

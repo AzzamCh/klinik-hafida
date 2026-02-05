@@ -32,14 +32,19 @@
     <div class="topbar d-flex align-items-center">
       <div class="container d-flex justify-content-center justify-content-md-between">
         <div class="contact-info d-flex align-items-center">
-          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:admin@klinikhafida.com">admin@klinikhafida.com</a></i>
-          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+62 812 3456 7890</span></i>
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:klinikhafida@gmail.com">klinikhafida@gmail.com</a></i>
+          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+62 811-2800-0588</span></i>
         </div>
         <div class="social-links d-none d-md-flex align-items-center">
-          <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-        </div>
+    
+    <a href="https://www.facebook.com/klinik.hafida.3" target="_blank" class="facebook">
+        <i class="bi bi-facebook"></i>
+    </a>
+    
+    <a href="https://www.instagram.com/klinikhafida.id/?hl=id" target="_blank" class="instagram">
+        <i class="bi bi-instagram"></i>
+    </a>
+</div>
       </div>
     </div>
 
@@ -59,6 +64,13 @@
             <li><a href="<?= base_url('/') ?>#doctors">Dokter</a></li>
             <li><a href="<?= base_url('/') ?>#articles">Artikel</a></li> 
             <li><a href="<?= base_url('/') ?>#contact">Kontak</a></li>
+
+            <?php if(session()->get('logged_in')) : ?>
+                <li><a href="<?= base_url('dashboard'); ?>" style="color: #0f9b0f; font-weight: bold;">Dashboard</a></li>
+            <?php else : ?>
+                <li><a href="<?= base_url('login'); ?>">Login Admin</a></li>
+            <?php endif; ?>
+            
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
@@ -331,27 +343,33 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
               <div class="card h-100 shadow-sm border-0" style="border-radius: 10px; overflow: hidden;">
                 
-                <div style="height: 200px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; color: #adb5bd;">
-                  <i class="bi bi-card-image" style="font-size: 3rem;"></i>
-                  </div>
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                    <?php if(!empty($item['gambar'])) : ?>
+                        <img src="<?= base_url('assets/img/blog/' . $item['gambar']); ?>" alt="<?= $item['judul']; ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                    <?php else : ?>
+                        <div style="width: 100%; height: 100%; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; color: #adb5bd;">
+                            <i class="bi bi-card-image" style="font-size: 3rem;"></i>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
                 <div class="card-body p-4">
                   <div class="d-flex align-items-center mb-2 text-muted small">
                     <i class="bi bi-calendar3 me-2" style="color: var(--accent-color);"></i> 
-                    <?= $item['tanggal']; ?>
+                    <?= date('d M Y', strtotime($item['tanggal'])); ?>
                   </div>
                   
                   <h5 class="card-title mb-3">
-                    <a href="<?= base_url('artikel'); ?>" style="color: var(--heading-color); text-decoration: none; font-weight: bold;">
+                    <a href="<?= base_url('artikel/' . $item['slug']); ?>" style="color: var(--heading-color); text-decoration: none; font-weight: bold;">
                       <?= $item['judul']; ?>
                     </a>
                   </h5>
                   
                   <p class="card-text text-muted">
-                    <?= $item['excerpt']; ?>
+                    <?= substr(strip_tags($item['isi_artikel']), 0, 100); ?>...
                   </p>
                   
-                  <a href="<?= base_url('artikel'); ?>" class="read-more align-self-end" style="color: var(--accent-color); font-weight: 600; text-decoration: none;">
+                  <a href="<?= base_url('artikel/' . $item['slug']); ?>" class="read-more align-self-end" style="color: var(--accent-color); font-weight: 600; text-decoration: none;">
                     Baca Selengkapnya <i class="bi bi-arrow-right"></i>
                   </a>
                 </div>
@@ -373,50 +391,63 @@
     </section>
 
     <section id="contact" class="contact section">
+      
       <div class="container section-title" data-aos="fade-up">
         <h2>Kontak & Lokasi</h2>
         <p>Kunjungi kami atau hubungi untuk informasi lebih lanjut</p>
       </div>
 
-      <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
-        <iframe style="border:0; width: 100%; height: 270px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.3!2d106.8!3d-6.2!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTInMDAuMCJTIDEwNsKwNDgnMDAuMCJF!5e0!3m2!1sen!2sid!4v1600000000000" frameborder="0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
-
       <div class="container" data-aos="fade-up" data-aos-delay="100">
         <div class="row gy-4">
-          <div class="col-lg-4">
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
-              <i class="bi bi-geo-alt flex-shrink-0"></i>
+
+          <div class="col-lg-6">
+            <div style="width: 100%; height: 100%; min-height: 400px;">
+                <iframe 
+                    style="border:0; width: 100%; height: 100%; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1);" 
+                    src="https://maps.google.com/maps?q=Klinik+Pratama+Hafida,+Jl.+Sulawesi+No.45,+Mulyoharjo,+Pemalang&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                    frameborder="0" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+          </div>
+
+          <div class="col-lg-6 d-flex flex-column justify-content-center">
+            
+            <div class="info-item d-flex mb-4" data-aos="fade-up" data-aos-delay="200">
+              <i class="bi bi-geo-alt flex-shrink-0" style="color: #ffffff; font-size: 24px; margin-right: 15px;"></i>
               <div>
                 <h3>Alamat</h3>
-                <p>Jl. Merdeka Raya No. 123, Kota Anda, Indonesia</p>
+                <p>Jalan Sulawesi Nomor 45. Kel. Mulyoharjo – PEMALANG</p>
               </div>
             </div>
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-              <i class="bi bi-telephone flex-shrink-0"></i>
+
+            <div class="info-item d-flex mb-4" data-aos="fade-up" data-aos-delay="300">
+              <i class="bi bi-telephone flex-shrink-0" style="color: #ffffff; font-size: 24px; margin-right: 15px;"></i>
               <div>
                 <h3>Telepon / WhatsApp</h3>
-                <p>+62 812 3456 7890</p>
+                <p>+62 811-2800-0588</p>
               </div>
             </div>
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="500">
-              <i class="bi bi-envelope flex-shrink-0"></i>
+
+            <div class="info-item d-flex mb-4" data-aos="fade-up" data-aos-delay="400">
+              <i class="bi bi-envelope flex-shrink-0" style="color: #ffffff; font-size: 24px; margin-right: 15px;"></i>
               <div>
                 <h3>Email</h3>
-                <p>admin@klinikhafida.com</p>
+                <p>klinikhafida@gmail.com</p>
               </div>
             </div>
-          </div>
 
-          <div class="col-lg-8">
-             <div class="alert alert-success">
-                 <strong>Info:</strong> Untuk respon cepat, silakan hubungi kami langsung melalui tombol WhatsApp di atas atau datang langsung ke klinik pada jam operasional.
-             </div>
+            <div class="alert alert-success mt-2" role="alert">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <strong>Info:</strong> Untuk respon cepat, silakan hubungi kami langsung melalui tombol WhatsApp di atas atau datang langsung ke klinik pada jam operasional.
+            </div>
+
           </div>
-        </div>
+          </div>
       </div>
     </section>
-
   </main>
 
   <footer id="footer" class="footer light-background">
@@ -429,10 +460,10 @@
   <h1 class="sitename">Klinik Hafida</h1>
 </a>
           <div class="footer-contact pt-3">
-            <p>Jl. Merdeka Raya No. 123</p>
-            <p>Kota Anda, Indonesia</p>
-            <p class="mt-3"><strong>HP:</strong> <span>+62 812 3456 7890</span></p>
-            <p><strong>Email:</strong> <span>admin@klinikhafida.com</span></p>
+            <p>Jalan Sulawesi Nomor 45. Kel. Mulyoharjo – PEMALANG</p>
+            <p>Pemalang, Indonesia</p>
+            <p class="mt-3"><strong>HP:</strong> <span>+62 811-2800-0588</span></p>
+            <p><strong>Email:</strong> <span>klinikhafida@gmail.com</span></p>
           </div>
           <div class="social-links d-flex mt-4">
             <a href=""><i class="bi bi-twitter-x"></i></a>
@@ -464,8 +495,7 @@
         <div class="col-lg-2 col-md-3 footer-links">
           <h4>Jam Buka</h4>
           <ul>
-            <li>Senin - Jumat: 08.00 - 21.00</li>
-            <li>Sabtu: 08.00 - 17.00</li>
+            <li>Senin - Sabtu: 07.00 - 23.00</li>
             <li>Minggu: Libur / Perjanjian</li>
           </ul>
         </div>
