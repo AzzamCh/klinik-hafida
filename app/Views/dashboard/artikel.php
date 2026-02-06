@@ -19,6 +19,7 @@
         <a href="<?= base_url('dashboard/dokter'); ?>"><i class="fas fa-user-md me-2"></i> Kelola Dokter</a>
         <a href="<?= base_url('dashboard/poli'); ?>"><i class="fas fa-hospital me-2"></i> Kelola Poli</a>
         <a href="<?= base_url('dashboard/artikel'); ?>" class="bg-success"><i class="fas fa-newspaper me-2"></i> Kelola Artikel</a>
+        <a href="<?= base_url('dashboard/slider'); ?>"><i class="fas fa-images me-2"></i> Kelola Slider</a>
         <hr>
         <a href="<?= base_url('logout'); ?>" class="text-warning"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
     </div>

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\DokterModel;
 use App\Models\PoliModel;
 use App\Models\ArtikelModel;
+use App\Models\CarouselModel;
 
 class Dashboard extends BaseController
 {
@@ -317,5 +318,104 @@ class Dashboard extends BaseController
         $artikelModel = new ArtikelModel();
         $artikelModel->delete($id);
         return redirect()->to('/dashboard/artikel');
+    }
+
+    // =================================================================
+    // KELOLA SLIDER (CAROUSEL)
+    // =================================================================
+
+
+    public function slider()
+    {
+        $carouselModel = new CarouselModel();
+        $data = [
+            'username' => session()->get('username'),
+            'slider'   => $carouselModel->findAll()
+        ];
+        return view('dashboard/slider', $data);
+    }
+
+    public function slider_create()
+    {
+        $data = ['username' => session()->get('username')];
+        return view('dashboard/slider_create', $data);
+    }
+
+    public function slider_store()
+    {
+        $carouselModel = new CarouselModel();
+
+        $fileGambar = $this->request->getFile('gambar');
+        if ($fileGambar->isValid() && ! $fileGambar->hasMoved()) {
+            $namaGambar = $fileGambar->getRandomName();
+            $fileGambar->move('assets/img/', $namaGambar); // Masuk ke folder img utama atau folder khusus
+        } else {
+            $namaGambar = 'hero-bg.jpg'; // Default
+        }
+
+        $carouselModel->save([
+            'judul'     => $this->request->getPost('judul'),
+            'deskripsi' => $this->request->getPost('deskripsi'),
+            'link'      => $this->request->getPost('link'),
+            'gambar'    => $namaGambar
+        ]);
+
+        return redirect()->to('/dashboard/slider');
+    }
+
+    public function slider_delete($id)
+    {
+        $carouselModel = new CarouselModel();
+        $carouselModel->delete($id);
+        return redirect()->to('/dashboard/slider');
+    }
+
+    // =================================================================
+    // EDIT SLIDER
+    // =================================================================
+
+    public function slider_edit($id)
+    {
+        $carouselModel = new \App\Models\CarouselModel(); // Panggil Model
+        
+        $data = [
+            'username' => session()->get('username'),
+            'slider'   => $carouselModel->find($id) // Ambil data berdasarkan ID
+        ];
+
+        // Pastikan file view ini sudah kamu buat (slider_edit.php)
+        return view('dashboard/slider_edit', $data);
+    }
+
+    // =================================================================
+    // UPDATE SLIDER (PROSES SIMPAN PERUBAHAN)
+    // =================================================================
+
+    public function slider_update($id)
+    {
+        $carouselModel = new \App\Models\CarouselModel();
+
+        // Ambil file gambar dari form
+        $fileGambar = $this->request->getFile('gambar');
+
+        // Cek: Apakah user upload gambar baru?
+        if ($fileGambar->isValid() && ! $fileGambar->hasMoved()) {
+            // Jika YA: Upload gambar baru
+            $namaGambar = $fileGambar->getRandomName();
+            $fileGambar->move('assets/img/', $namaGambar);
+        } else {
+            // Jika TIDAK: Pakai nama gambar lama (dari hidden input)
+            $namaGambar = $this->request->getPost('gambar_lama');
+        }
+
+        // Update ke database
+        $carouselModel->update($id, [
+            'judul'     => $this->request->getPost('judul'),
+            'deskripsi' => $this->request->getPost('deskripsi'),
+            'link'      => $this->request->getPost('link'),
+            'gambar'    => $namaGambar
+        ]);
+
+        return redirect()->to('/dashboard/slider');
     }
 }

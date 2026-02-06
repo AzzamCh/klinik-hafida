@@ -5,43 +5,58 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-// Rute untuk Halaman Depan
+
+// 1. Rute Halaman Depan (Pengunjung)
 $routes->get('/', 'Home::index');
 
-// --- TAMBAHAN BARU UNTUK LAYANAN ---
-// Artinya: Kalau URL-nya "layanan/detail/poli-umum", 
-// arahkan ke Controller "Layanan", fungsi "detail", dan kirim "poli-umum" sebagai parameter ($1).
+// 2. Rute Detail Layanan
 $routes->get('layanan/detail/(:segment)', 'Layanan::detail/$1');
 
-// Rute untuk Login
+// 3. Rute Login & Logout
 $routes->get('/login', 'Auth::index');
 $routes->post('/login/auth', 'Auth::login');
 $routes->get('/logout', 'Auth::logout');
 
-// Rute Dashboard (Sementara)
-// Rute Dashboard Admin
+// 4. Rute Publik Artikel (Baca Berita)
+$routes->get('/artikel', 'Artikel::index'); 
+$routes->get('/artikel/(:segment)', 'Artikel::detail/$1');
+
+// =================================================================
+// 5. RUTE DASHBOARD ADMIN (Semua berawalan /dashboard)
+// =================================================================
+
+// Halaman Utama Dashboard
 $routes->get('/dashboard', 'Dashboard::index');
+
+// --- KELOLA DOKTER ---
 $routes->get('/dashboard/dokter', 'Dashboard::dokter');
-$routes->get('/dashboard/dokter/create', 'Dashboard::dokter_create'); // Buka Form
-$routes->post('/dashboard/dokter/store', 'Dashboard::dokter_store');  // Proses Simpan
-// Rute CRUD Dokter Lengkap
-$routes->get('/dashboard/dokter/edit/(:num)', 'Dashboard::dokter_edit/$1');    // Form Edit
-$routes->post('/dashboard/dokter/update/(:num)', 'Dashboard::dokter_update/$1');// Proses Update
-$routes->get('/dashboard/dokter/delete/(:num)', 'Dashboard::dokter_delete/$1'); // Proses Hapus
-// Rute CRUD Poli
+$routes->get('/dashboard/dokter/create', 'Dashboard::dokter_create');
+$routes->post('/dashboard/dokter/store', 'Dashboard::dokter_store');
+$routes->get('/dashboard/dokter/edit/(:num)', 'Dashboard::dokter_edit/$1');
+$routes->post('/dashboard/dokter/update/(:num)', 'Dashboard::dokter_update/$1');
+$routes->get('/dashboard/dokter/delete/(:num)', 'Dashboard::dokter_delete/$1');
+
+// --- KELOLA POLI ---
 $routes->get('/dashboard/poli', 'Dashboard::poli');
 $routes->get('/dashboard/poli/create', 'Dashboard::poli_create');
 $routes->post('/dashboard/poli/store', 'Dashboard::poli_store');
 $routes->get('/dashboard/poli/edit/(:num)', 'Dashboard::poli_edit/$1');
 $routes->post('/dashboard/poli/update/(:num)', 'Dashboard::poli_update/$1');
 $routes->get('/dashboard/poli/delete/(:num)', 'Dashboard::poli_delete/$1');
-// Rute CRUD Artikel
+
+// --- KELOLA ARTIKEL ---
 $routes->get('/dashboard/artikel', 'Dashboard::artikel');
 $routes->get('/dashboard/artikel/create', 'Dashboard::artikel_create');
 $routes->post('/dashboard/artikel/store', 'Dashboard::artikel_store');
 $routes->get('/dashboard/artikel/edit/(:num)', 'Dashboard::artikel_edit/$1');
 $routes->post('/dashboard/artikel/update/(:num)', 'Dashboard::artikel_update/$1');
 $routes->get('/dashboard/artikel/delete/(:num)', 'Dashboard::artikel_delete/$1');
-// Rute Publik untuk Artikel
-$routes->get('/artikel', 'Artikel::index'); // Halaman List (Opsional)
-$routes->get('/artikel/(:segment)', 'Artikel::detail/$1'); // Halaman Baca Detail
+
+// --- KELOLA SLIDER (CAROUSEL) ---
+// (Perhatikan: Sekarang sudah ada awalan '/dashboard/')
+$routes->get('/dashboard/slider', 'Dashboard::slider');
+$routes->get('/dashboard/slider/create', 'Dashboard::slider_create');
+$routes->post('/dashboard/slider/store', 'Dashboard::slider_store');
+$routes->get('/dashboard/slider/edit/(:num)', 'Dashboard::slider_edit/$1');
+$routes->post('/dashboard/slider/update/(:num)', 'Dashboard::slider_update/$1');
+$routes->get('/dashboard/slider/delete/(:num)', 'Dashboard::slider_delete/$1');
