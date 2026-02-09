@@ -279,33 +279,49 @@
       </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <form action="#" class="php-email-form">
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <input type="text" name="name" class="form-control" id="name" placeholder="Nama Lengkap Pasien" required="">
-            </div>
-            <div class="col-md-4 form-group mt-3 mt-md-0">
-              <input type="tel" class="form-control" name="phone" id="phone" placeholder="Nomor WhatsApp Aktif" required="">
-            </div>
-            <div class="col-md-4 form-group mt-3 mt-md-0">
-              <select name="department" id="department" class="form-select" required="">
-                <option value="">Pilih Poli Tujuan</option>
-                <option value="Poli Umum">Poli Umum</option>
-                <option value="Poli Gigi">Poli Gigi</option>
-                <option value="KIA">KIA & Imunisasi</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group mt-3">
-            <textarea class="form-control" name="message" rows="5" placeholder="Keluhan Singkat (Opsional)"></textarea>
-          </div>
-          
-          <div class="mt-3 text-center">
-            <a href="https://wa.me/6281128000588?text=Halo%20Admin%20Klinik%20Hafida,%20saya%20ingin%20mendaftar%20berobat." target="_blank" class="btn btn-primary btn-lg rounded-pill px-5 shadow">
-              <i class="bi bi-whatsapp me-2"></i> Kirim via WhatsApp
-            </a>
-          </div>
-        </form>
+      <form id="waForm" class="php-email-form">
+  <div class="row">
+    
+    <div class="col-md-4 form-group">
+      <input type="text" name="name" class="form-control" id="inputNama" placeholder="Nama Lengkap Pasien" required>
+    </div>
+    
+    <div class="col-md-4 form-group mt-3 mt-md-0">
+      <input type="number" class="form-control" id="inputNik" placeholder="NIK (KTP/KK)" required>
+    </div>
+    
+    <div class="col-md-4 form-group mt-3 mt-md-0">
+      <input type="tel" class="form-control" id="inputHp" placeholder="Nomor WhatsApp Aktif" required>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 form-group mt-3">
+      <input type="date" name="date" class="form-control datepicker" id="inputTanggal" required>
+    </div>
+
+    <div class="col-md-6 form-group mt-3">
+      <select name="department" id="inputPoli" class="form-select" required>
+        <option value="">-- Pilih Poli Tujuan --</option>
+        <?php foreach($layanan_kami as $poli): ?>
+          <option value="<?= $poli['nama_poli']; ?>"><?= $poli['nama_poli']; ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+    
+    </div>
+
+  <div class="form-group mt-3">
+    <textarea class="form-control" name="message" id="inputKeluhan" rows="5" placeholder="Tuliskan keluhan atau gejala yang dirasakan..." required></textarea>
+  </div>
+  
+  <div class="text-center mt-3">
+    <button type="submit" class="btn btn-success rounded-pill px-5 py-2">
+      <i class="fab fa-whatsapp me-2"></i> Kirim Pendaftaran via WA
+    </button>
+  </div>
+
+</form>
       </div>
     </section>
 
@@ -524,6 +540,38 @@
   <script src="<?= base_url('assets/vendor/swiper/swiper-bundle.min.js'); ?>"></script>
   
   <script src="<?= base_url('assets/js/main.js'); ?>"></script>
+  <script>
+  document.getElementById('waForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // 1. Ambil Data (Tanpa Dokter)
+    var nama    = document.getElementById('inputNama').value;
+    var nik     = document.getElementById('inputNik').value;
+    var hp      = document.getElementById('inputHp').value;
+    var tanggal = document.getElementById('inputTanggal').value;
+    var poli    = document.getElementById('inputPoli').value;
+    var keluhan = document.getElementById('inputKeluhan').value;
+
+    // 2. Nomor WA Admin (GANTI DENGAN NOMOR MU)
+    var nomorAdmin = "6281128000588"; 
+
+    // 3. Format Pesan (Baris Dokter dihapus)
+    var pesan = "*PENDAFTARAN PASIEN BARU*" + "%0A" +
+                "----------------------------------" + "%0A" +
+                "*Nama:* " + nama + "%0A" +
+                "*NIK:* " + nik + "%0A" +
+                "*No HP:* " + hp + "%0A" +
+                "*Rencana Datang:* " + tanggal + "%0A" +
+                "*Poli Tujuan:* " + poli + "%0A" +
+                "*Keluhan:* " + keluhan + "%0A" +
+                "----------------------------------" + "%0A" +
+                "Mohon info ketersediaan dokter ya min. Terima kasih!";
+
+    // 4. Kirim
+    var linkWA = "https://wa.me/" + nomorAdmin + "?text=" + pesan;
+    window.open(linkWA, '_blank');
+  });
+</script>
 
 </body>
 </html>
