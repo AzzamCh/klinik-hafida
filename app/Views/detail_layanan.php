@@ -46,7 +46,7 @@
                             <p class="text-muted fst-italic">Siap melayani kebutuhan kesehatan Anda dan keluarga.</p>
                             
                             <div class="d-grid gap-2 mt-4">
-                                <a href="https://wa.me/6281234567890" class="btn btn-success rounded-pill">
+                                <a href="https://wa.me/6281128000588?text=Halo%20Admin,%20saya%20mau%20tanya%20tentang%20layanan%20<?= $layanan['nama_poli']; ?>" class="btn btn-success rounded-pill" target="_blank">
                                     <i class="bi bi-whatsapp"></i> Chat WhatsApp
                                 </a>
                             </div>

@@ -19,8 +19,14 @@
   <link href="<?= base_url('assets/vendor/fontawesome-free/css/all.min.css'); ?>" rel="stylesheet">
   <link href="<?= base_url('assets/vendor/glightbox/css/glightbox.min.css'); ?>" rel="stylesheet">
   <link href="<?= base_url('assets/vendor/swiper/swiper-bundle.min.css'); ?>" rel="stylesheet">
-
   <link href="<?= base_url('assets/css/main.css'); ?>" rel="stylesheet">
+  
+  <style>
+      /* Styling untuk Pagination agar rapi */
+      .pagination { justify-content: center; margin-top: 20px; }
+      .page-item .page-link { color: #198754; border-radius: 5px; margin: 0 2px; }
+      .page-item.active .page-link { background-color: #198754; border-color: #198754; color: white; }
+  </style>
 </head>
 
 <body class="starter-page-page">
@@ -71,8 +77,11 @@
           </ol>
         </div>
       </nav>
-    </div><section id="blog-posts" class="blog-posts section">
+    </div>
+
+    <section id="blog-posts" class="blog-posts section">
       <div class="container">
+        
         <div class="row gy-4">
 
           <?php if(!empty($artikel)): ?>
@@ -111,6 +120,7 @@
                     Baca Selengkapnya <i class="bi bi-arrow-right"></i>
                   </a>
                 </div>
+
               </div>
             </div>
 
@@ -119,12 +129,17 @@
             <div class="col-12 text-center py-5">
                 <div class="alert alert-light" role="alert">
                   <h4 class="alert-heading"><i class="bi bi-info-circle"></i> Belum ada artikel</h4>
-                  <p>Maaf, saat ini belum ada artikel yang diterbitkan. Silakan kembali lagi nanti.</p>
+                  <p>Maaf, saat ini belum ada artikel yang diterbitkan.</p>
                 </div>
             </div>
           <?php endif; ?>
 
+        </div> <div class="row mt-5" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-12 d-flex justify-content-center">
+                <?= $pager->links('artikel', 'default_full') ?>
+            </div>
         </div>
+
       </div>
     </section>
 
@@ -137,7 +152,6 @@
   </footer>
 
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
   <div id="preloader"></div>
 
   <script src="<?= base_url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
@@ -146,7 +160,6 @@
   <script src="<?= base_url('assets/vendor/glightbox/js/glightbox.min.js'); ?>"></script>
   <script src="<?= base_url('assets/vendor/purecounter/purecounter_vanilla.js'); ?>"></script>
   <script src="<?= base_url('assets/vendor/swiper/swiper-bundle.min.js'); ?>"></script>
-
   <script src="<?= base_url('assets/js/main.js'); ?>"></script>
 
 </body>

@@ -148,20 +148,11 @@
             <p>
               Berlokasi strategis di Jl. Sulawesi No. 45, Kel. Mulyoharjo, Pemalang. Kami berkomitmen memberikan pelayanan kesehatan dasar yang bermutu, didukung oleh tenaga medis profesional dan manajemen yang handal di bawah naungan <strong>CV. Hafida Medika Sejahtera</strong>.
             </p>
-            
-            <div class="row mt-4">
-               <div class="col-md-6">
-                 <div class="d-flex align-items-center mb-3">
-                   <i class="bi bi-check-circle-fill text-success me-2 fs-4"></i>
-                   <span class="fw-bold">Pelayanan 5S (Senyum, Salam, Sapa, Sopan, Santun)</span>
-                 </div>
-               </div>
-               <div class="col-md-6">
-                 <div class="d-flex align-items-center mb-3">
-                   <i class="bi bi-check-circle-fill text-success me-2 fs-4"></i>
-                   <span class="fw-bold">Fasilitas Medis Modern</span>
-                 </div>
-               </div>
+
+            <div class="mt-4">
+                <a href="https://www.youtube.com/watch?v=lo-gN6N_A8w" target="_blank" class="btn btn-danger rounded-pill px-4 py-2 shadow-sm fw-bold">
+                    <i class="bi bi-play-circle-fill me-2 fs-5"></i> Tonton Video Profil
+                </a>
             </div>
           </div>
         </div>
