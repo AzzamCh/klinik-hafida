@@ -53,13 +53,19 @@ $routes->post('/dashboard/artikel/update/(:num)', 'Dashboard::artikel_update/$1'
 $routes->get('/dashboard/artikel/delete/(:num)', 'Dashboard::artikel_delete/$1');
 
 // --- KELOLA SLIDER (CAROUSEL) ---
-// (Perhatikan: Sekarang sudah ada awalan '/dashboard/')
 $routes->get('/dashboard/slider', 'Dashboard::slider');
-$routes->get('/dashboard/slider/create', 'Dashboard::slider_create');
-$routes->post('/dashboard/slider/store', 'Dashboard::slider_store');
-$routes->get('/dashboard/slider/edit/(:num)', 'Dashboard::slider_edit/$1');
-$routes->post('/dashboard/slider/update/(:num)', 'Dashboard::slider_update/$1');
-$routes->get('/dashboard/slider/delete/(:num)', 'Dashboard::slider_delete/$1');
+$routes->get('/dashboard/slider_create', 'Dashboard::slider_create'); // Ganti / jadi _
+$routes->post('/dashboard/slider_store', 'Dashboard::slider_store');  // Ganti / jadi _
+$routes->get('/dashboard/slider_edit/(:num)', 'Dashboard::slider_edit/$1'); // Ganti / jadi _
+$routes->post('/dashboard/slider_update/(:num)', 'Dashboard::slider_update/$1'); // Ganti / jadi _
+$routes->get('/dashboard/slider_delete/(:num)', 'Dashboard::slider_delete/$1'); // Ganti / jadi _
+// Kelola User (Admin)
+$routes->get('/dashboard/user', 'User::index');
+$routes->get('/dashboard/user/create', 'User::create');
+$routes->post('/dashboard/user/save', 'User::save');
+$routes->get('/dashboard/user/edit/(:num)', 'User::edit/$1');
+$routes->post('/dashboard/user/update/(:num)', 'User::update/$1');
+$routes->get('/dashboard/user/delete/(:num)', 'User::delete/$1');
 
 // Rute untuk Chatbot
 $routes->post('chatbot/reply', 'Chatbot::reply');

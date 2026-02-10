@@ -15,15 +15,26 @@ class Users extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+            // === TAMBAHAN BARU ===
+            'nama_lengkap' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '100',
+                'null'       => true, // Boleh kosong dulu biar aman
+            ],
+            // =====================
             'username' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '100',
             ],
             'password' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '255', // Password akan di-enkripsi (panjang)
+                'constraint' => '255',
             ],
             'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'updated_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
