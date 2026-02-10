@@ -60,3 +60,6 @@ $routes->post('/dashboard/slider/store', 'Dashboard::slider_store');
 $routes->get('/dashboard/slider/edit/(:num)', 'Dashboard::slider_edit/$1');
 $routes->post('/dashboard/slider/update/(:num)', 'Dashboard::slider_update/$1');
 $routes->get('/dashboard/slider/delete/(:num)', 'Dashboard::slider_delete/$1');
+
+// Rute untuk Chatbot
+$routes->post('chatbot/reply', 'Chatbot::reply');
