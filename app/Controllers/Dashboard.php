@@ -11,21 +11,56 @@ class Dashboard extends BaseController
 {
     public function index()
     {
-        // 1. Cek Apakah Sudah Login?
-        if(!session()->get('logged_in')){
-            return redirect()->to('/login'); 
+        if (! session()->get('logged_in')) {
+            return redirect()->to('/login');
         }
 
-        // 2. Siapkan Model untuk Hitung Data
-        $dokterModel = new DokterModel();
-        $poliModel = new PoliModel();
+        $dokterModel  = new \App\Models\DokterModel();
+        $poliModel    = new \App\Models\PoliModel();
+        $artikelModel = new \App\Models\ArtikelModel();
 
-        // 3. Ambil Data Statistik
+        // 1. Data Card (Kotak Angka)
         $data = [
-            'count_dokter' => $dokterModel->countAll(), // Hitung total dokter
-            'count_poli'   => $poliModel->countAll(),   // Hitung total poli
-            'username'     => session()->get('username')
+            'total_dokter'  => $dokterModel->countAll(),
+            'total_poli'    => $poliModel->countAll(),
+            'total_artikel' => $artikelModel->countAll(),
+            'user_nama'     => session()->get('nama_lengkap')
         ];
+
+        // 2. Data Grafik: Dokter per Spesialisasi
+        // Query: SELECT spesialisasi, COUNT(*) as jumlah FROM dokter GROUP BY spesialisasi
+        $db = \Config\Database::connect();
+        $queryDokter = $db->table('dokter')
+                          ->select('spesialisasi, count(*) as total')
+                          ->groupBy('spesialisasi')
+                          ->get()->getResultArray();
+
+        $data['grafik_dokter_label'] = [];
+        $data['grafik_dokter_total'] = [];
+        
+        foreach($queryDokter as $row){
+            $data['grafik_dokter_label'][] = $row['spesialisasi'];
+            $data['grafik_dokter_total'][] = $row['total'];
+        }
+
+        // 3. Data Grafik: Artikel per Bulan (Tahun Ini)
+        // Query manual agak panjang biar rapi per bulan
+        $tahun_ini = date('Y');
+        $queryArtikel = $db->query("
+            SELECT MONTH(tanggal) as bulan, COUNT(*) as total 
+            FROM artikel 
+            WHERE YEAR(tanggal) = '$tahun_ini'
+            GROUP BY MONTH(tanggal)
+        ")->getResultArray();
+
+        // Siapkan array kosong untuk 12 bulan
+        $data['grafik_artikel_total'] = array_fill(0, 12, 0); // [0,0,0,...]
+
+        foreach($queryArtikel as $row){
+            // Bulan 1 (Januari) masuk ke index 0
+            $index = $row['bulan'] - 1;
+            $data['grafik_artikel_total'][$index] = $row['total'];
+        }
 
         return view('dashboard/home', $data);
     }

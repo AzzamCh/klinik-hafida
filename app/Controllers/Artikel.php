@@ -9,14 +9,24 @@ class Artikel extends BaseController
     public function index()
     {
         $model = new ArtikelModel();
+        
+        // 1. Tangkap kata kunci pencarian (kalau ada)
+        $keyword = $this->request->getVar('keyword');
+
+        if ($keyword) {
+            // Kalau ada yang dicari, cari di Judul ATAU Isi Artikel
+            $artikel = $model->like('judul', $keyword)->orLike('isi_artikel', $keyword);
+        } else {
+            // Kalau tidak ada, ambil semua (seperti biasa)
+            $artikel = $model;
+        }
 
         $data = [
-            'title'   => 'Arsip Berita & Artikel - Klinik Hafida',
-            // Gunakan paginate(6) agar dibatasi 6 berita per halaman
-            // 'artikel' adalah nama grup pagination (sesuai config)
-            'artikel' => $model->orderBy('tanggal', 'DESC')->paginate(6, 'artikel'),
-            // Kirim variabel pager untuk tombol halaman
-            'pager'   => $model->pager
+            'title'   => 'Berita & Kegiatan Klinik Hafida',
+            // Kita pakai pagination (6 berita per halaman) biar rapi
+            'artikel' => $artikel->orderBy('tanggal', 'DESC')->paginate(6, 'artikel'),
+            'pager'   => $model->pager,
+            'keyword' => $keyword // Kirim kata kunci ke View biar tetap muncul di kotak pencarian
         ];
 
         return view('artikel_list', $data);

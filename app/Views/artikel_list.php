@@ -11,7 +11,7 @@
 
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <link href="<?= base_url('assets/vendor/bootstrap/css/bootstrap.min.css'); ?>" rel="stylesheet">
   <link href="<?= base_url('assets/vendor/bootstrap-icons/bootstrap-icons.css'); ?>" rel="stylesheet">
@@ -82,6 +82,18 @@
     <section id="blog-posts" class="blog-posts section">
       <div class="container">
         
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8 col-lg-6">
+                <form action="" method="get">
+                    <div class="input-group input-group-lg shadow-sm">
+                        <input type="text" class="form-control border-success" placeholder="Cari artikel (misal: gigi, vaksin)..." name="keyword" value="<?= $keyword ?? ''; ?>">
+                        <button class="btn btn-success px-4" type="submit">
+                            <i class="fas fa-search me-2"></i> Cari
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="row gy-4">
 
           <?php if(!empty($artikel)): ?>
@@ -126,15 +138,20 @@
 
             <?php endforeach; ?>
           <?php else: ?>
+            
             <div class="col-12 text-center py-5">
                 <div class="alert alert-light" role="alert">
-                  <h4 class="alert-heading"><i class="bi bi-info-circle"></i> Belum ada artikel</h4>
-                  <p>Maaf, saat ini belum ada artikel yang diterbitkan.</p>
+                  <h4 class="alert-heading text-muted"><i class="bi bi-search"></i> Artikel tidak ditemukan</h4>
+                  <p>Maaf, tidak ada artikel yang cocok dengan kata kunci <strong>"<?= $keyword; ?>"</strong>.</p>
+                  <a href="<?= base_url('artikel'); ?>" class="btn btn-outline-success btn-sm mt-2">Lihat Semua Artikel</a>
                 </div>
             </div>
+
           <?php endif; ?>
 
-        </div> <div class="row mt-5" data-aos="fade-up" data-aos-delay="200">
+        </div> 
+        
+        <div class="row mt-5" data-aos="fade-up" data-aos-delay="200">
             <div class="col-12 d-flex justify-content-center">
                 <?= $pager->links('artikel', 'default_full') ?>
             </div>
