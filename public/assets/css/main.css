@@ -1996,3 +1996,78 @@ section,
   display: flex;
   gap: 5px;
 }
+
+/* =======================================================
+   ✨ UPGRADE TAMPILAN: TENTANG & VISI MISI ✨
+   ======================================================= */
+
+/* 1. GAMBAR TENTANG KAMI (Sebelah Kiri) */
+.about img {
+  border-radius: 25px; /* Sudut tumpul modern */
+  box-shadow: 0 15px 40px rgba(0,0,0,0.1); /* Bayangan dalam */
+  border: 5px solid #fff; /* Bingkai putih */
+  transition: transform 0.4s ease;
+}
+
+.about img:hover {
+  transform: scale(1.02) rotate(1deg); /* Efek miring dikit pas disorot */
+}
+
+/* 2. KARTU VISI, MISI, TATA NILAI */
+.about .card {
+  background: #fff;
+  border-radius: 20px !important;
+  border: 1px solid rgba(0,0,0,0.03) !important; /* Border super tipis */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important; /* Bayangan halus */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animasi membal */
+  overflow: visible; /* Biar efek 3D keluar */
+}
+
+/* Efek Hover (Saat mouse nempel) */
+.about .card:hover {
+  transform: translateY(-10px); /* Kartu naik ke atas */
+  box-shadow: 0 20px 40px rgba(32, 191, 107, 0.15) !important; /* Bayangan Hijau menyala */
+  border-bottom: 5px solid var(--accent-color) !important; /* Garis hijau di bawah */
+}
+
+/* 3. IKON DI DALAM KARTU (Mata, Target, Diamond) */
+.about .card .card-body div.text-success {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: #f0fdf4; /* Hijau muda banget */
+  border-radius: 50%; /* Jadi Bulat */
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.about .card .card-body i {
+  font-size: 2.5rem !important; /* Perbesar ikon */
+  color: var(--accent-color);
+  transition: all 0.3s ease;
+}
+
+/* Animasi Ikon saat Kartu di-Hover */
+.about .card:hover .card-body div.text-success {
+  background: var(--accent-color); /* Lingkaran jadi hijau tua */
+  transform: scale(1.1);
+}
+
+.about .card:hover .card-body i {
+  color: #fff; /* Ikon jadi putih */
+}
+
+/* 4. TYPOGRAPHY (JUDUL & TEKS) */
+.about .card-title {
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 15px;
+  color: #2d3436;
+}
+
+.about .card-text {
+  color: #636e72; /* Abu yang enak dibaca */
+  line-height: 1.7; /* Jarak antar baris renggang */
+}
