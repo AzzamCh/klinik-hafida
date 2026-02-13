@@ -1780,19 +1780,36 @@ section,
     background-color: var(--accent-color) !important;
 }
 
-/* --- HERO SECTION (TEMA HIJAU KLINIK) --- */
+/* --- HERO SECTION (BACKGROUND BERBINGKAI) --- */
 .hero-custom {
-  /* Gradasi dari Hijau Tua ke Hijau Tosca */
-  background: linear-gradient(135deg, #0f9b0f 0%, #00d2ff 100%); 
-  /* Atau versi lebih soft: */
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  /* 1. Warna Background (Tetap Gradasi Hijau) */
+  background: linear-gradient(135deg, #0f9b0f 0%, #00d2ff 100%);
   
+  /* 2. MEMBUAT FRAME / BINGKAI PUTIH */
+  margin: 20px;           /* Memberi jarak dari tepi layar */
+  border: 10px solid #fff; /* Garis tepi putih tebal (Frame-nya) */
+  border-radius: 30px;    /* Sudut tumpul */
+  
+  /* 3. Efek Bayangan (Biar melayang) */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+
+  /* Pengaturan Layout */
   padding: 80px 0 100px 0;
   min-height: 600px;
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
+}
+
+/* Penyesuaian Mobile biar bingkainya pas di HP */
+@media (max-width: 768px) {
+  .hero-custom {
+    margin: 10px;
+    border-width: 5px;
+    border-radius: 20px;
+    padding: 60px 0;
+  }
 }
 
 /* Sisanya SAMA seperti sebelumnya */
