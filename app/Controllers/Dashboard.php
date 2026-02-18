@@ -9,27 +9,37 @@ use App\Models\CarouselModel;
 
 class Dashboard extends BaseController
 {
+    // Deklarasi properti model agar bisa dipakai di semua fungsi
+    protected $dokterModel;
+    protected $poliModel;
+    protected $artikelModel;
+    protected $carouselModel;
+
+    public function __construct()
+    {
+        // Inisialisasi model di sini SEKALI SAJA
+        $this->dokterModel   = new DokterModel();
+        $this->poliModel     = new PoliModel();
+        $this->artikelModel  = new ArtikelModel();
+        $this->carouselModel = new CarouselModel();
+    }
+
     public function index()
     {
         if (! session()->get('logged_in')) {
             return redirect()->to('/login');
         }
 
-        $dokterModel  = new \App\Models\DokterModel();
-        $poliModel    = new \App\Models\PoliModel();
-        $artikelModel = new \App\Models\ArtikelModel();
-
-        // 1. Data Card (Kotak Angka)
         $data = [
-            'total_dokter'  => $dokterModel->countAll(),
-            'total_poli'    => $poliModel->countAll(),
-            'total_artikel' => $artikelModel->countAll(),
+            'total_dokter'  => $this->dokterModel->countAll(),
+            'total_poli'    => $this->poliModel->countAll(),
+            'total_artikel' => $this->artikelModel->countAll(),
             'user_nama'     => session()->get('nama_lengkap')
         ];
 
-        // 2. Data Grafik: Dokter per Spesialisasi
-        // Query: SELECT spesialisasi, COUNT(*) as jumlah FROM dokter GROUP BY spesialisasi
         $db = \Config\Database::connect();
+        
+        // Data Grafik Dokter
         $queryDokter = $db->table('dokter')
                           ->select('spesialisasi, count(*) as total')
                           ->groupBy('spesialisasi')
@@ -43,8 +53,7 @@ class Dashboard extends BaseController
             $data['grafik_dokter_total'][] = $row['total'];
         }
 
-        // 3. Data Grafik: Artikel per Bulan (Tahun Ini)
-        // Query manual agak panjang biar rapi per bulan
+        // Data Grafik Artikel
         $tahun_ini = date('Y');
         $queryArtikel = $db->query("
             SELECT MONTH(tanggal) as bulan, COUNT(*) as total 
@@ -53,11 +62,9 @@ class Dashboard extends BaseController
             GROUP BY MONTH(tanggal)
         ")->getResultArray();
 
-        // Siapkan array kosong untuk 12 bulan
-        $data['grafik_artikel_total'] = array_fill(0, 12, 0); // [0,0,0,...]
+        $data['grafik_artikel_total'] = array_fill(0, 12, 0); 
 
         foreach($queryArtikel as $row){
-            // Bulan 1 (Januari) masuk ke index 0
             $index = $row['bulan'] - 1;
             $data['grafik_artikel_total'][$index] = $row['total'];
         }
@@ -65,55 +72,34 @@ class Dashboard extends BaseController
         return view('dashboard/home', $data);
     }
 
-    // ... fungsi index() yang tadi ada di atas ...
-
+    // =================================================================
+    // KELOLA DOKTER
+    // =================================================================
     public function dokter()
     {
-        // Cek Login
-        if(!session()->get('logged_in')){
-            return redirect()->to('/login'); 
-        }
-
-        $dokterModel = new DokterModel();
-        
         $data = [
             'username' => session()->get('username'),
-            'dokter'   => $dokterModel->findAll() // Ambil semua data dokter
+            'dokter'   => $this->dokterModel->findAll()
         ];
-
         return view('dashboard/dokter', $data);
     }
 
-    // 1. Menampilkan Form Tambah Dokter
     public function dokter_create()
     {
-        if(!session()->get('logged_in')){ return redirect()->to('/login'); }
-
         $data = ['username' => session()->get('username')];
         return view('dashboard/dokter_create', $data);
     }
 
-    // 2. Proses Simpan Data Dokter (Termasuk Upload Foto)
     public function dokter_store()
     {
-        $dokterModel = new DokterModel();
-
-        // Ambil file foto dari form
         $fileFoto = $this->request->getFile('foto');
-
-        // Cek apakah ada file yang diupload?
-        if ($fileFoto->isValid() && ! $fileFoto->hasMoved()) {
-            // Generate nama file unik (biar gak bentrok)
-            $namaFoto = $fileFoto->getRandomName();
-            // Pindahkan file ke folder assets/img/doctors
+        $namaFoto = ($fileFoto->isValid() && ! $fileFoto->hasMoved()) ? $fileFoto->getRandomName() : 'default.jpg';
+        
+        if ($namaFoto !== 'default.jpg') {
             $fileFoto->move('assets/img/doctors/', $namaFoto);
-        } else {
-            // Kalau gak upload foto, pakai foto default (opsional)
-            $namaFoto = 'default.jpg'; 
         }
 
-        // Simpan data ke Database
-        $dokterModel->save([
+        $this->dokterModel->save([
             'nama_dokter'  => $this->request->getPost('nama_dokter'),
             'spesialisasi' => $this->request->getPost('spesialisasi'),
             'jadwal'       => $this->request->getPost('jadwal'),
@@ -122,46 +108,27 @@ class Dashboard extends BaseController
 
         return redirect()->to('/dashboard/dokter');
     }
-    // --- FITUR EDIT ---
 
-    // 1. Tampilkan Form Edit dengan Data Lama
     public function dokter_edit($id)
     {
-        if(!session()->get('logged_in')){ return redirect()->to('/login'); }
-
-        $dokterModel = new DokterModel();
-        
         $data = [
             'username' => session()->get('username'),
-            'dokter'   => $dokterModel->find($id) // Ambil data berdasarkan ID
+            'dokter'   => $this->dokterModel->find($id)
         ];
-
-        if (!$data['dokter']) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Data dokter tidak ditemukan.");
-        }
-
         return view('dashboard/dokter_edit', $data);
     }
 
-    // 2. Proses Update Data
     public function dokter_update($id)
     {
-        $dokterModel = new DokterModel();
-        
-        // Cek apakah user upload foto baru?
         $fileFoto = $this->request->getFile('foto');
-
         if ($fileFoto->isValid() && ! $fileFoto->hasMoved()) {
-            // Kalau upload baru: Generate nama & Pindahkan file
             $namaFoto = $fileFoto->getRandomName();
             $fileFoto->move('assets/img/doctors/', $namaFoto);
         } else {
-            // Kalau TIDAK upload: Pakai nama foto lama (hidden input)
             $namaFoto = $this->request->getPost('foto_lama');
         }
 
-        // Update Database
-        $dokterModel->update($id, [
+        $this->dokterModel->update($id, [
             'nama_dokter'  => $this->request->getPost('nama_dokter'),
             'spesialisasi' => $this->request->getPost('spesialisasi'),
             'jadwal'       => $this->request->getPost('jadwal'),
@@ -171,161 +138,114 @@ class Dashboard extends BaseController
         return redirect()->to('/dashboard/dokter');
     }
 
-    // --- FITUR DELETE ---
-
-    // 3. Hapus Data Dokter
     public function dokter_delete($id)
     {
-        $dokterModel = new DokterModel();
-        $dokterModel->delete($id);
+        $this->dokterModel->delete($id);
         return redirect()->to('/dashboard/dokter');
     }
 
     // =================================================================
-    // KELOLA POLI (LAYANAN)
+    // KELOLA POLI
     // =================================================================
-
-    // 1. Tampilkan Daftar Poli
     public function poli()
     {
-        $poliModel = new PoliModel();
         $data = [
             'username' => session()->get('username'),
-            'poli'     => $poliModel->findAll()
+            'poli'     => $this->poliModel->findAll()
         ];
         return view('dashboard/poli', $data);
     }
 
-    // 2. Form Tambah Poli
     public function poli_create()
     {
         $data = ['username' => session()->get('username')];
         return view('dashboard/poli_create', $data);
     }
 
-    // 3. Proses Simpan Poli
     public function poli_store()
     {
-        $poliModel = new PoliModel();
-        
-        // Buat slug otomatis dari nama (Contoh: "Poli Gigi" -> "poli-gigi")
         $nama = $this->request->getPost('nama_poli');
-        $slug = url_title($nama, '-', true);
-
-        $poliModel->save([
+        $this->poliModel->save([
             'nama_poli' => $nama,
             'deskripsi' => $this->request->getPost('deskripsi'),
             'icon'      => $this->request->getPost('icon'),
-            'slug'      => $slug
+            'slug'      => url_title($nama, '-', true)
         ]);
-
         return redirect()->to('/dashboard/poli');
     }
 
-    // 4. Form Edit Poli
     public function poli_edit($id)
     {
-        $poliModel = new PoliModel();
         $data = [
             'username' => session()->get('username'),
-            'poli'     => $poliModel->find($id)
+            'poli'     => $this->poliModel->find($id)
         ];
         return view('dashboard/poli_edit', $data);
     }
 
-    // 5. Proses Update Poli
     public function poli_update($id)
     {
-        $poliModel = new PoliModel();
-        
         $nama = $this->request->getPost('nama_poli');
-        $slug = url_title($nama, '-', true);
-
-        $poliModel->update($id, [
+        $this->poliModel->update($id, [
             'nama_poli' => $nama,
             'deskripsi' => $this->request->getPost('deskripsi'),
             'icon'      => $this->request->getPost('icon'),
-            'slug'      => $slug
+            'slug'      => url_title($nama, '-', true)
         ]);
-
         return redirect()->to('/dashboard/poli');
     }
 
-    // 6. Hapus Poli
     public function poli_delete($id)
     {
-        $poliModel = new PoliModel();
-        $poliModel->delete($id);
+        $this->poliModel->delete($id);
         return redirect()->to('/dashboard/poli');
     }
 
     // =================================================================
-    // KELOLA ARTIKEL (BERITA)
+    // KELOLA ARTIKEL
     // =================================================================
-
-    // 1. Tampilkan Daftar Artikel
     public function artikel()
     {
-        $artikelModel = new ArtikelModel();
         $data = [
             'username' => session()->get('username'),
-            'artikel'  => $artikelModel->orderBy('tanggal', 'DESC')->findAll()
+            'artikel'  => $this->artikelModel->orderBy('tanggal', 'DESC')->findAll()
         ];
         return view('dashboard/artikel', $data);
     }
 
-    // 2. Form Tambah Artikel
     public function artikel_create()
     {
         $data = ['username' => session()->get('username')];
         return view('dashboard/artikel_create', $data);
     }
 
-    // 3. Proses Simpan Artikel
     public function artikel_store()
     {
-        $artikelModel = new ArtikelModel();
-        
-        // Handle Upload Gambar
         $fileGambar = $this->request->getFile('gambar');
-        if ($fileGambar->isValid() && ! $fileGambar->hasMoved()) {
-            $namaGambar = $fileGambar->getRandomName();
-            $fileGambar->move('assets/img/blog/', $namaGambar);
-        } else {
-            $namaGambar = null; // Boleh kosong (nanti pakai gambar default di view)
-        }
+        $namaGambar = ($fileGambar->isValid() && ! $fileGambar->hasMoved()) ? $fileGambar->getRandomName() : null;
+        if ($namaGambar) $fileGambar->move('assets/img/blog/', $namaGambar);
 
-        // Buat slug dari judul
-        $slug = url_title($this->request->getPost('judul'), '-', true);
-
-        $artikelModel->save([
+        $this->artikelModel->save([
             'judul'       => $this->request->getPost('judul'),
-            'slug'        => $slug,
+            'slug'        => url_title($this->request->getPost('judul'), '-', true),
             'isi_artikel' => $this->request->getPost('isi_artikel'),
             'tanggal'     => $this->request->getPost('tanggal'),
             'gambar'      => $namaGambar
         ]);
-
         return redirect()->to('/dashboard/artikel');
     }
 
-    // 4. Form Edit Artikel
     public function artikel_edit($id)
     {
-        $artikelModel = new ArtikelModel();
         $data = [
             'username' => session()->get('username'),
-            'artikel'  => $artikelModel->find($id)
+            'artikel'  => $this->artikelModel->find($id)
         ];
         return view('dashboard/artikel_edit', $data);
     }
 
-    // 5. Proses Update Artikel
     public function artikel_update($id)
     {
-        $artikelModel = new ArtikelModel();
-        
-        // Cek ganti gambar atau tidak
         $fileGambar = $this->request->getFile('gambar');
         if ($fileGambar->isValid() && ! $fileGambar->hasMoved()) {
             $namaGambar = $fileGambar->getRandomName();
@@ -334,38 +254,30 @@ class Dashboard extends BaseController
             $namaGambar = $this->request->getPost('gambar_lama');
         }
 
-        $slug = url_title($this->request->getPost('judul'), '-', true);
-
-        $artikelModel->update($id, [
+        $this->artikelModel->update($id, [
             'judul'       => $this->request->getPost('judul'),
-            'slug'        => $slug,
+            'slug'        => url_title($this->request->getPost('judul'), '-', true),
             'isi_artikel' => $this->request->getPost('isi_artikel'),
             'tanggal'     => $this->request->getPost('tanggal'),
             'gambar'      => $namaGambar
         ]);
-
         return redirect()->to('/dashboard/artikel');
     }
 
-    // 6. Hapus Artikel
     public function artikel_delete($id)
     {
-        $artikelModel = new ArtikelModel();
-        $artikelModel->delete($id);
+        $this->artikelModel->delete($id);
         return redirect()->to('/dashboard/artikel');
     }
 
     // =================================================================
     // KELOLA SLIDER (CAROUSEL)
     // =================================================================
-
-
     public function slider()
     {
-        $carouselModel = new CarouselModel();
         $data = [
             'username' => session()->get('username'),
-            'slider'   => $carouselModel->findAll()
+            'slider'   => $this->carouselModel->findAll()
         ];
         return view('dashboard/slider', $data);
     }
@@ -378,79 +290,50 @@ class Dashboard extends BaseController
 
     public function slider_store()
     {
-        $carouselModel = new CarouselModel();
-
         $fileGambar = $this->request->getFile('gambar');
-        if ($fileGambar->isValid() && ! $fileGambar->hasMoved()) {
-            $namaGambar = $fileGambar->getRandomName();
-            $fileGambar->move('assets/img/', $namaGambar); // Masuk ke folder img utama atau folder khusus
-        } else {
-            $namaGambar = 'hero-bg.jpg'; // Default
-        }
+        $namaGambar = ($fileGambar->isValid() && ! $fileGambar->hasMoved()) ? $fileGambar->getRandomName() : 'hero-bg.jpg';
+        if ($namaGambar !== 'hero-bg.jpg') $fileGambar->move('assets/img/', $namaGambar);
 
-        $carouselModel->save([
+        $this->carouselModel->save([
             'judul'     => $this->request->getPost('judul'),
             'deskripsi' => $this->request->getPost('deskripsi'),
             'link'      => $this->request->getPost('link'),
             'gambar'    => $namaGambar
         ]);
+        return redirect()->to('/dashboard/slider');
+    }
 
+    public function slider_edit($id)
+    {
+        $data = [
+            'username' => session()->get('username'),
+            'slider'   => $this->carouselModel->find($id)
+        ];
+        return view('dashboard/slider_edit', $data);
+    }
+
+    public function slider_update($id)
+    {
+        $fileGambar = $this->request->getFile('gambar');
+        if ($fileGambar->isValid() && ! $fileGambar->hasMoved()) {
+            $namaGambar = $fileGambar->getRandomName();
+            $fileGambar->move('assets/img/', $namaGambar);
+        } else {
+            $namaGambar = $this->request->getPost('gambar_lama');
+        }
+
+        $this->carouselModel->update($id, [
+            'judul'     => $this->request->getPost('judul'),
+            'deskripsi' => $this->request->getPost('deskripsi'),
+            'link'      => $this->request->getPost('link'),
+            'gambar'    => $namaGambar
+        ]);
         return redirect()->to('/dashboard/slider');
     }
 
     public function slider_delete($id)
     {
-        $carouselModel = new CarouselModel();
-        $carouselModel->delete($id);
-        return redirect()->to('/dashboard/slider');
-    }
-
-    // =================================================================
-    // EDIT SLIDER
-    // =================================================================
-
-    public function slider_edit($id)
-    {
-        $carouselModel = new \App\Models\CarouselModel(); // Panggil Model
-        
-        $data = [
-            'username' => session()->get('username'),
-            'slider'   => $carouselModel->find($id) // Ambil data berdasarkan ID
-        ];
-
-        // Pastikan file view ini sudah kamu buat (slider_edit.php)
-        return view('dashboard/slider_edit', $data);
-    }
-
-    // =================================================================
-    // UPDATE SLIDER (PROSES SIMPAN PERUBAHAN)
-    // =================================================================
-
-    public function slider_update($id)
-    {
-        $carouselModel = new \App\Models\CarouselModel();
-
-        // Ambil file gambar dari form
-        $fileGambar = $this->request->getFile('gambar');
-
-        // Cek: Apakah user upload gambar baru?
-        if ($fileGambar->isValid() && ! $fileGambar->hasMoved()) {
-            // Jika YA: Upload gambar baru
-            $namaGambar = $fileGambar->getRandomName();
-            $fileGambar->move('assets/img/', $namaGambar);
-        } else {
-            // Jika TIDAK: Pakai nama gambar lama (dari hidden input)
-            $namaGambar = $this->request->getPost('gambar_lama');
-        }
-
-        // Update ke database
-        $carouselModel->update($id, [
-            'judul'     => $this->request->getPost('judul'),
-            'deskripsi' => $this->request->getPost('deskripsi'),
-            'link'      => $this->request->getPost('link'),
-            'gambar'    => $namaGambar
-        ]);
-
+        $this->carouselModel->delete($id);
         return redirect()->to('/dashboard/slider');
     }
 }
